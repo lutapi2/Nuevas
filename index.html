@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primera muestra</title>
+  
+  <!-- Tailwind CSS CDN with configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          letterSpacing: {
+            widestLogo: '0.28em',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#131315] text-[#d4d4d8] dark:bg-[#131315] dark:text-[#d4d4d8] min-h-screen flex flex-col antialiased selection:bg-neutral-700 selection:text-white">
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="w-full border-b border-[#242427] dark:border-[#242427] transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+      
+      <!-- Logo CRAVE fiel a la laptop -->
+      <a href="#" class="text-sm sm:text-base font-medium tracking-[0.28em] text-[#ededee] dark:text-[#ededee] hover:opacity-85 transition-opacity">
+        CRAVE
+      </a>
+
+      <!-- Acciones de cabecera -->
+      <div class="flex items-center space-x-4 sm:space-x-6">
+        <!-- Botón para añadir nuevo calzado -->
+        <button 
+          id="btn-open-create-modal"
+          class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-neutral-700 dark:border-[#2c2c31] bg-neutral-900/60 dark:bg-[#18181b] text-neutral-300 dark:text-neutral-300 hover:border-neutral-400 hover:text-white text-xs tracking-wider transition-all"
+        >
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>Nuevo Calzado</span>
+        </button>
+
+        <!-- Selector Modo Claro / Oscuro -->
+        <button 
+          id="theme-toggle" 
+          class="p-2 rounded-full border border-neutral-800 dark:border-[#27272a] hover:border-neutral-500 text-neutral-400 hover:text-white transition-all flex items-center justify-center" 
+          title="Cambiar tema"
+          aria-label="Cambiar tema claro/oscuro"
+        >
+          <i data-lucide="sun" id="theme-icon" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= CONTENIDO PRINCIPAL ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 sm:px-10 py-10 sm:py-14">
+    
+    <!-- Barra superior de colección -->
+    <div class="flex items-center justify-between mb-8 pb-3 border-b border-neutral-800/80 dark:border-[#222226]">
+      <span class="text-xs tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-400 font-medium">
+        Colección Esencial / Edición Colombia
+      </span>
+      <span class="text-xs text-neutral-500 font-mono" id="items-count-label">0 Estilos</span>
+    </div>
+
+    <!-- Grid de Productos (Fiel a la composición del render en laptop) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7" id="product-grid">
+      <!-- Se inyecta dinámicamente -->
+    </div>
+  </main>
+
+  <!-- ================= MODAL AGREGAR CALZADO ================= -->
+  <div id="create-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="bg-[#18181b] border border-neutral-800 rounded-2xl max-w-lg w-full p-6 sm:p-7 relative text-neutral-200 shadow-2xl">
+      
+      <div class="flex items-center justify-between pb-4 mb-5 border-b border-neutral-800">
+        <div>
+          <span class="text-[10px] tracking-[0.25em] uppercase text-neutral-500 block">Catálogo CRAVE</span>
+          <h2 class="text-base font-normal text-white">Publicar Nuevo Calzado</h2>
+        </div>
+        <button id="btn-close-create-modal" class="text-neutral-400 hover:text-white p-1 rounded-full hover:bg-neutral-800 transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-create-shoe" class="space-y-4">
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-neutral-400 mb-1.5">Nombre del Modelo</label>
+          <input 
+            type="text" 
+            id="shoe-title" 
+            required 
+            placeholder="Ej: Classic Slide Sandal" 
+            class="w-full bg-[#121214] border border-neutral-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors"
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-neutral-400 mb-1.5">Precio en Pesos Colombianos (COP)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-neutral-500 text-xs font-mono">$</span>
+            <input 
+              type="number" 
+              id="shoe-price" 
+              required 
+              min="1000" 
+              step="1000"
+              placeholder="Ej: 340000" 
+              class="w-full bg-[#121214] border border-neutral-800 rounded-lg pl-8 pr-16 py-2.5 text-xs text-white placeholder-neutral-600 font-mono focus:outline-none focus:border-neutral-500 transition-colors"
+            >
+            <span class="absolute right-3.5 top-2.5 text-neutral-500 text-[11px] font-mono">COP</span>
+          </div>
+          <p class="text-[11px] text-neutral-500 mt-1">Ingresa el valor numérico (ej. 320000 = $ 320.000 COP)</p>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-neutral-400 mb-1.5">Fotografía del Calzado</label>
+          
+          <!-- Botón de subida de archivo desde el PC -->
+          <label for="shoe-file-input" class="cursor-pointer border border-dashed border-neutral-700 hover:border-neutral-500 rounded-xl p-4 flex flex-col items-center justify-center bg-[#131316] transition-colors group">
+            <i data-lucide="upload-cloud" class="w-6 h-6 text-neutral-400 group-hover:text-white mb-2 transition-colors"></i>
+            <span class="text-xs text-neutral-300 group-hover:text-white font-medium">Seleccionar imagen desde tu PC</span>
+            <span class="text-[11px] text-neutral-500 mt-0.5">Soporta JPG, PNG, WEBP</span>
+            <input type="file" id="shoe-file-input" accept="image/*" class="hidden">
+          </label>
+
+          <!-- Vista previa de imagen seleccionada -->
+          <div id="image-preview-wrapper" class="hidden mt-3 relative rounded-xl overflow-hidden border border-neutral-700 bg-neutral-900 aspect-[16/9] max-h-40">
+            <img id="image-preview" src="" alt="Previsualización" class="w-full h-full object-cover">
+            <button 
+              type="button" 
+              id="btn-remove-preview"
+              class="absolute top-2 right-2 bg-black/70 hover:bg-black text-white p-1.5 rounded-full text-xs transition-colors"
+              title="Quitar imagen"
+            >
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs uppercase tracking-widest text-neutral-400 mb-1.5">Descripción (Opcional)</label>
+          <textarea 
+            id="shoe-desc" 
+            rows="2" 
+            placeholder="Piel curtida vegetal, acabado mate, diseño ergonómico..." 
+            class="w-full bg-[#121214] border border-neutral-800 rounded-lg px-3.5 py-2 text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors"
+          ></textarea>
+        </div>
+
+        <div class="pt-2">
+          <button 
+            type="submit" 
+            class="w-full py-3 bg-white text-black text-xs uppercase tracking-[0.18em] font-medium rounded-lg hover:bg-neutral-200 transition-colors"
+          >
+            Añadir al Catálogo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL VISTA DETALLADA ================= -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#18181b] border border-neutral-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl relative text-neutral-200">
+      
+      <button 
+        id="btn-close-detail-modal"
+        class="absolute top-4 right-4 z-10 p-2 text-neutral-400 hover:text-white rounded-full bg-black/50 transition-colors"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="h-64 md:h-full bg-[#202023] overflow-hidden relative min-h-[260px]">
+          <img id="detail-img" src="" alt="" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="p-6 md:p-8 flex flex-col justify-between">
+          <div>
+            <span class="text-[10px] tracking-[0.25em] uppercase text-neutral-400 block mb-1">CRAVE Atelier Colombia</span>
+            <h3 id="detail-title" class="text-xl font-normal text-white mb-2"></h3>
+            <p id="detail-price" class="text-base font-mono font-medium text-neutral-200 mb-4"></p>
+            <p id="detail-desc" class="text-xs text-neutral-400 leading-relaxed mb-6"></p>
+
+            <div class="mb-6">
+              <span class="block text-[10px] uppercase tracking-widest text-neutral-400 mb-2">Tallas Disponibles</span>
+              <div class="flex gap-2 flex-wrap">
+                <span class="text-xs px-2.5 py-1 border border-neutral-700 rounded text-neutral-300">38</span>
+                <span class="text-xs px-2.5 py-1 border border-neutral-700 rounded text-neutral-300">39</span>
+                <span class="text-xs px-2.5 py-1 border border-neutral-700 rounded text-neutral-300">40</span>
+                <span class="text-xs px-2.5 py-1 border border-neutral-700 rounded text-neutral-300">41</span>
+                <span class="text-xs px-2.5 py-1 border border-neutral-700 rounded text-neutral-300">42</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de eliminación directa desde el detalle -->
+          <div class="pt-4 border-t border-neutral-800">
+            <button 
+              id="btn-delete-from-detail"
+              class="w-full py-2.5 border border-red-900/60 text-red-400 hover:bg-red-950/40 hover:border-red-700 text-xs tracking-wider uppercase rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+              <span>Eliminar este Calzado</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL DE CONFIRMACIÓN DE ELIMINACIÓN ================= -->
+  <div id="confirm-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#18181b] border border-neutral-800 rounded-xl max-w-sm w-full p-6 text-neutral-200 text-center shadow-2xl">
+      <div class="w-12 h-12 rounded-full bg-red-950/50 border border-red-800/60 mx-auto flex items-center justify-center text-red-400 mb-4">
+        <i data-lucide="trash-2" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-base font-normal text-white mb-2">¿Eliminar calzado?</h3>
+      <p id="confirm-message" class="text-xs text-neutral-400 mb-6 leading-relaxed">
+        Esta acción quitará este calzado de tu catálogo permanentemente.
+      </p>
+      <div class="flex gap-3">
+        <button 
+          id="btn-cancel-delete" 
+          class="flex-1 py-2.5 border border-neutral-700 text-neutral-300 hover:bg-neutral-800 text-xs uppercase tracking-wider rounded-lg transition-colors"
+        >
+          Cancelar
+        </button>
+        <button 
+          id="btn-confirm-delete" 
+          class="flex-1 py-2.5 bg-red-700 hover:bg-red-600 text-white text-xs uppercase tracking-wider rounded-lg font-medium transition-colors"
+        >
+          Sí, Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER DISCRETO ================= -->
+  <footer class="w-full border-t border-[#222226] py-8 text-center text-xs text-neutral-500 tracking-wider">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 CRAVE ATELIER. Cuero genuino y diseño sobrio.</p>
+      <div class="flex gap-6 items-center">
+        <button id="btn-restore-catalog" class="text-neutral-500 hover:text-neutral-300 underline underline-offset-4">
+          Restaurar Calzado Inicial
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= NOTIFICACIÓN TOAST ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300 bg-neutral-900 text-neutral-100 border border-neutral-700 px-4 py-3 rounded-lg shadow-2xl text-xs flex items-center gap-3">
+    <i data-lucide="check" id="toast-icon" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-text">Acción completada</span>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
